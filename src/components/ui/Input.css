@@ -1,0 +1,91 @@
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-field {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
+  outline: none;
+  height: 48px;
+}
+
+.input-field::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input-field:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  background: var(--bg-elevated);
+}
+
+.input-field:hover:not(:focus) {
+  border-color: var(--border-accent);
+}
+
+.input-field.input-error {
+  border-color: var(--error);
+}
+
+.input-field.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.input-with-icon {
+  padding-left: 44px;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: var(--accent-primary);
+}
+
+.input-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.input-error-msg {
+  font-size: var(--text-xs);
+  color: var(--error);
+  margin-top: var(--space-1);
+}
+
+.input-toggle-password {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.input-toggle-password:hover {
+  color: var(--text-primary);
+}
