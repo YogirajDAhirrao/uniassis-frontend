@@ -33,10 +33,11 @@ export const sendMessage = async (sessionId, content) => {
 /**
  * Stream a message using Server-Sent Events.
  * Calls onDelta(text) for each streamed chunk.
+ * Calls onSources(sources) when document citations are available.
  * Calls onDone() when streaming is complete.
  * Calls onError(msg) on error.
  */
-export const streamMessage = async (sessionId, content, { onDelta, onDone, onError }) => {
+export const streamMessage = async (sessionId, content, { onDelta, onSources, onDone, onError }) => {
   const token = localStorage.getItem('accessToken');
 
   const response = await fetch(
@@ -76,7 +77,9 @@ export const streamMessage = async (sessionId, content, { onDelta, onDone, onErr
         if (!jsonStr) continue;
         try {
           const chunk = JSON.parse(jsonStr);
-          if (chunk.type === 'delta' && chunk.content) {
+          if (chunk.type === 'sources' && chunk.sources) {
+            onSources?.(chunk.sources);
+          } else if (chunk.type === 'delta' && chunk.content) {
             onDelta?.(chunk.content);
           } else if (chunk.type === 'done') {
             onDone?.();

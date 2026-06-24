@@ -1,7 +1,9 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { User, Bot, Copy, Check } from 'lucide-react';
+import { User, Bot, Copy, Check, FileText, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { downloadDocument } from '../../api/documents';
+import { toast } from 'react-hot-toast';
 
 function CopyButton({ content }) {
   const [copied, setCopied] = useState(false);
@@ -30,6 +32,89 @@ function CopyButton({ content }) {
         ? <Check className="w-3.5 h-3.5" style={{ color: 'var(--success)' }} />
         : <Copy className="w-3.5 h-3.5" />}
     </button>
+  );
+}
+
+function SourceItem({ src }) {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      await downloadDocument(src.documentId, src.title);
+      toast.success(`Downloading "${src.title}"`);
+    } catch {
+      toast.error('Download failed');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDownload}
+      disabled={downloading}
+      className="flex items-center gap-2 px-2.5 py-1.5 rounded w-full text-left transition-colors duration-150"
+      style={{
+        background: 'var(--bg)',
+        border: '1px solid var(--border)',
+        cursor: downloading ? 'not-allowed' : 'pointer',
+      }}
+      onMouseEnter={(e) => {
+        if (!downloading) {
+          e.currentTarget.style.background = 'var(--accent-bg)';
+          e.currentTarget.style.borderColor = 'var(--navy)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'var(--bg)';
+        e.currentTarget.style.borderColor = 'var(--border)';
+      }}
+      title={`Download ${src.title}`}
+    >
+      {downloading
+        ? <Loader2 className="w-3 h-3 flex-shrink-0 animate-spin" style={{ color: 'var(--navy)' }} />
+        : <FileText className="w-3 h-3 flex-shrink-0" style={{ color: 'var(--navy)' }} />}
+      <span
+        className="text-xs font-medium truncate"
+        style={{ color: 'var(--navy)' }}
+      >
+        {src.title}
+      </span>
+      <span
+        className="text-xs ml-auto flex-shrink-0"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        {Math.round(src.score * 100)}% match
+      </span>
+    </button>
+  );
+}
+
+// Deduplicate sources by documentId before rendering
+function SourcesList({ sources }) {
+  if (!sources || sources.length === 0) return null;
+
+  const seen = new Map();
+  sources.forEach((s) => {
+    if (!seen.has(s.documentId)) seen.set(s.documentId, s);
+  });
+  const unique = [...seen.values()];
+
+  return (
+    <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+      <p
+        className="text-xs font-semibold uppercase tracking-widest mb-2"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        Sources
+      </p>
+      <div className="flex flex-col gap-1.5">
+        {unique.map((src) => (
+          <SourceItem key={src.documentId} src={src} />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -72,21 +157,26 @@ export default function MessageBubble({ message }) {
             {message.content}
           </p>
         ) : (
-          <div className="prose-chat">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {message.content || ''}
-            </ReactMarkdown>
-            {isStreaming && (
-              <span
-                className="inline-block w-2 h-4 rounded-sm ml-0.5 align-middle"
-                style={{
-                  background: 'var(--navy)',
-                  opacity: 0.7,
-                  animation: 'pulse 1s ease-in-out infinite',
-                }}
-              />
-            )}
-          </div>
+          <>
+            <div className="prose-chat">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.content || ''}
+              </ReactMarkdown>
+              {isStreaming && (
+                <span
+                  className="inline-block w-2 h-4 rounded-sm ml-0.5 align-middle"
+                  style={{
+                    background: 'var(--navy)',
+                    opacity: 0.7,
+                    animation: 'pulse 1s ease-in-out infinite',
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Sources — shown after streaming completes */}
+            {!isStreaming && <SourcesList sources={message.sources} />}
+          </>
         )}
 
         {/* Copy button for assistant messages */}

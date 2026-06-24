@@ -99,6 +99,13 @@ export default function ChatPage() {
 
     try {
       await streamMessage(activeSessionId, content, {
+        onSources: (sources) => {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId ? { ...m, sources } : m
+            )
+          );
+        },
         onDelta: (text) => {
           setMessages((prev) =>
             prev.map((m) =>

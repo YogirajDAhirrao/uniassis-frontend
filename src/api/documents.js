@@ -2,6 +2,7 @@ import api from './axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
+/** POST /api/document/upload — admin only */
 export const uploadDocument = async (file, title) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -17,6 +18,25 @@ export const uploadDocument = async (file, title) => {
   return data;
 };
 
+/** GET /api/document/ — list all documents (admin) */
+export const listDocuments = async () => {
+  const { data } = await api.get('/api/document/');
+  return data;
+};
+
+/** GET /api/document/:id — get document + ingestion status (admin) */
+export const getDocumentStatus = async (documentId) => {
+  const { data } = await api.get(`/api/document/${documentId}`);
+  return data;
+};
+
+/** DELETE /api/document/:id — delete + purge vectors (admin) */
+export const deleteDocument = async (documentId) => {
+  const { data } = await api.delete(`/api/document/${documentId}`);
+  return data;
+};
+
+/** GET /api/document/:id/download — download file (all auth) */
 export const downloadDocument = async (documentId, fileName) => {
   const token = localStorage.getItem('accessToken');
   const response = await fetch(`${BASE_URL}/api/document/${documentId}/download`, {
