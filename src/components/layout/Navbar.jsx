@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { logout } from '../../api/auth';
 import { toast } from 'react-hot-toast';
-import { MessageSquare, FileText, LogOut, GraduationCap, Shield, BookOpen } from 'lucide-react';
+import { MessageSquare, FileText, LogOut, GraduationCap, Shield, BookOpen, Newspaper } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAdmin, logoutUser, isAuthenticated } = useAuth();
@@ -22,11 +22,17 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { to: '/chat',      label: 'Chat',      icon: MessageSquare, show: isAuthenticated },
-    { to: '/documents', label: 'Documents',  icon: FileText,      show: isAdmin },
+    { to: '/feed',      label: 'Notice Board', icon: Newspaper,     show: isAuthenticated },
+    { to: '/chat',      label: 'Chat',          icon: MessageSquare, show: isAuthenticated },
+    { to: '/documents', label: 'Documents',      icon: FileText,      show: isAdmin },
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/feed') {
+      return location.pathname === '/feed' || location.pathname.startsWith('/posts');
+    }
+    return location.pathname === path;
+  };
 
   return (
     <nav

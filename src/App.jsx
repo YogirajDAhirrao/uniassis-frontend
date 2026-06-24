@@ -8,6 +8,9 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ChatPage from './pages/ChatPage';
 import DocumentsPage from './pages/DocumentsPage';
+import FeedPage from './pages/FeedPage';
+import PostDetailPage from './pages/PostDetailPage';
+import CreatePostPage from './pages/CreatePostPage';
 
 export default function App() {
   return (
@@ -19,6 +22,37 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
+          {/* Feed — all authenticated users */}
+          <Route
+            path="/feed"
+            element={
+              <ProtectedRoute>
+                <FeedPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Post detail — all authenticated users */}
+          <Route
+            path="/posts/:postId"
+            element={
+              <ProtectedRoute>
+                <PostDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Create post — admin only */}
+          <Route
+            path="/posts/new"
+            element={
+              <ProtectedRoute requireAdmin>
+                <CreatePostPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Chat — all authenticated users */}
           <Route
             path="/chat"
             element={
@@ -28,6 +62,7 @@ export default function App() {
             }
           />
 
+          {/* Documents — admin only */}
           <Route
             path="/documents"
             element={
