@@ -73,7 +73,7 @@ export default function RegisterPage() {
       });
       loginSuccess(data.accessToken, data.user);
       toast.success(`Welcome to UniAssist, ${data.user.name}!`);
-      navigate("/chat");
+      navigate("/dashboard");
     } catch (err) {
       const msg =
         err.response?.data?.message || "Registration failed. Try again.";

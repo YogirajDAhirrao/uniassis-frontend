@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/chat" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

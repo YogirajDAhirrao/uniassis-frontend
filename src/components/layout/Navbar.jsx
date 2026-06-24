@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { logout } from '../../api/auth';
 import { toast } from 'react-hot-toast';
-import { MessageSquare, FileText, LogOut, GraduationCap, Shield, BookOpen, Newspaper, Mail } from 'lucide-react';
+import { MessageSquare, FileText, LogOut, GraduationCap, Shield, BookOpen, Newspaper, Mail, LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAdmin, logoutUser, isAuthenticated } = useAuth();
@@ -22,10 +22,11 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { to: '/feed',      label: 'Notice Board',    icon: Newspaper,     show: isAuthenticated },
-    { to: '/chat',      label: 'Chat',             icon: MessageSquare, show: isAuthenticated },
-    { to: '/emails',    label: 'Email',            icon: Mail,          show: isAdmin },
-    { to: '/documents', label: 'Documents',         icon: FileText,      show: isAdmin },
+    { to: '/dashboard', label: 'Dashboard',    icon: LayoutDashboard, show: isAuthenticated },
+    { to: '/feed',      label: 'Notices',       icon: Newspaper,       show: isAuthenticated },
+    { to: '/chat',      label: 'AI Assistant',  icon: MessageSquare,   show: isAuthenticated },
+    { to: '/emails',    label: 'Email',         icon: Mail,            show: isAdmin },
+    { to: '/documents', label: 'Documents',     icon: FileText,        show: isAdmin },
   ];
 
   const isActive = (path) => {
@@ -46,9 +47,9 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
 
-        {/* Logo */}
+        {/* Logo — links to dashboard if logged in, landing if not */}
         <Link
-          to="/"
+          to={isAuthenticated ? '/dashboard' : '/'}
           className="flex items-center gap-2 font-semibold text-base"
           style={{ color: 'var(--navy)', textDecoration: 'none' }}
         >
