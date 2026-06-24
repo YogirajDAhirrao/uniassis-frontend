@@ -8,11 +8,11 @@ import { toast } from 'react-hot-toast';
 // Hardcoded courses matching the DB — courseId 1 = ALL (global), others = specific
 const COURSES = [
   { id: 1,  name: 'All Courses (General Announcement)' },
-  { id: 2,  name: 'Computer Engineering' },
-  { id: 3,  name: 'Information Technology' },
-  { id: 4,  name: 'Electronics & Telecommunication' },
-  { id: 5,  name: 'Mechanical Engineering' },
-  { id: 6,  name: 'Civil Engineering' },
+  { id: 2,  name: 'BE' },
+  { id: 3,  name: 'BCA' },
+  { id: 4,  name: 'MCA' },
+  { id: 5,  name: 'ME' },
+  { id: 6,  name: 'BA' },
 ];
 
 export default function CreatePostPage() {

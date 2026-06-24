@@ -11,6 +11,7 @@ import DocumentsPage from './pages/DocumentsPage';
 import FeedPage from './pages/FeedPage';
 import PostDetailPage from './pages/PostDetailPage';
 import CreatePostPage from './pages/CreatePostPage';
+import EmailPage from './pages/EmailPage';
 
 export default function App() {
   return (
@@ -68,6 +69,16 @@ export default function App() {
             element={
               <ProtectedRoute requireAdmin>
                 <DocumentsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Email campaigns — admin only */}
+          <Route
+            path="/emails"
+            element={
+              <ProtectedRoute requireAdmin>
+                <EmailPage />
               </ProtectedRoute>
             }
           />
